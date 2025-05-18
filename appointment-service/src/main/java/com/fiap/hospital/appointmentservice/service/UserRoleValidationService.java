@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UserValidationService {
+public class UserRoleValidationService {
 
     AuthServiceClient authServiceClient;
 

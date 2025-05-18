@@ -3,6 +3,7 @@ package com.fiap.hospital.appointmentservice.entity;
 import com.fiap.hospital.appointmentservice.enums.AppointmentStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
@@ -13,22 +14,30 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
-    private Long idPatient;
+    Long idPatient;
 
-    private Long idDoctor;
+    Long idDoctor;
 
-    private Long idNurse;
+    Long idNurse;
 
-    private LocalDateTime dateTime;
+    LocalDateTime appointmentDateTime;
 
-    private String description;
+    String description;
 
     @Enumerated(EnumType.STRING)
-    private AppointmentStatus status;
+    AppointmentStatus status;
+
+    @Transient
+    String patientName;
+    @Transient
+    String doctorName;
+    @Transient
+    String nurseName;
 }

@@ -1,11 +1,10 @@
 package com.fiap.hospital.authservice.controller;
 
-import com.fiap.hospital.authservice.dto.LoginRequest;
-import com.fiap.hospital.authservice.dto.LoginResponse;
-import com.fiap.hospital.authservice.dto.RegisterRequest;
-import com.fiap.hospital.authservice.dto.RegisterResponse;
+import com.fiap.hospital.authservice.dto.*;
+import com.fiap.hospital.authservice.mapper.UserMapper;
 import com.fiap.hospital.authservice.usecase.LoginUseCase;
 import com.fiap.hospital.authservice.usecase.RegisterUseCase;
+import com.fiap.hospital.authservice.usecase.ValidateTokenUseCase;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +24,25 @@ public class AuthController {
 
     LoginUseCase loginUseCase;
     RegisterUseCase registerUseCase;
+    ValidateTokenUseCase validateTokenUseCase;
+    UserMapper userMapper;
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(registerUseCase.execute(request));
+        var user = userMapper.map(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userMapper.map(registerUseCase.execute(user)));
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(loginUseCase.execute(request));
     }
+
+    @PostMapping("/validate-token")
+    public ResponseEntity<TokenValidationResponse> validateToken(@RequestBody @Valid TokenValidationRequest request) {
+        TokenValidationResponse response = validateTokenUseCase.execute(request);
+        return ResponseEntity.ok(response);
+    }
+
 
 }

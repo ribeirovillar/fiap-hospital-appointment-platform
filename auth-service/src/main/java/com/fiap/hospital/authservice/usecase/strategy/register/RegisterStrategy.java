@@ -1,7 +1,7 @@
 package com.fiap.hospital.authservice.usecase.strategy.register;
 
-import com.fiap.hospital.authservice.dto.RegisterRequest;
+import com.fiap.hospital.authservice.entity.User;
 
 public interface RegisterStrategy {
-    void execute(RegisterRequest request);
+    void execute(User user);
 }

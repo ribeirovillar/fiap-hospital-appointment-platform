@@ -1,7 +1,7 @@
 package com.fiap.hospital.appointmentservice.usecase.strategy;
 
-import com.fiap.hospital.appointmentservice.dto.AppointmentRequest;
-import com.fiap.hospital.appointmentservice.service.UserValidationService;
+import com.fiap.hospital.appointmentservice.entity.Appointment;
+import com.fiap.hospital.appointmentservice.service.UserRoleValidationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UserRoleValidation implements CreateAppointmentStrategy {
 
-    UserValidationService userValidationService;
+    UserRoleValidationService userRoleValidationService;
 
     @Override
-    public void execute(AppointmentRequest request) {
-        userValidationService.validateUserIdByRole(request.getIdDoctor(), "DOCTOR");
-        userValidationService.validateUserIdByRole(request.getIdPatient(), "PATIENT");
-        if (request.getIdNurse() != null) {
-            userValidationService.validateUserIdByRole(request.getIdNurse(), "NURSE");
+    public void execute(Appointment appointment) {
+        userRoleValidationService.validateUserIdByRole(appointment.getIdDoctor(), "DOCTOR");
+        userRoleValidationService.validateUserIdByRole(appointment.getIdPatient(), "PATIENT");
+        if (appointment.getIdNurse() != null) {
+            userRoleValidationService.validateUserIdByRole(appointment.getIdNurse(), "NURSE");
         }
     }
 }

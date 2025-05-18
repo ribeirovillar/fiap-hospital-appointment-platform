@@ -25,7 +25,7 @@ public class AppointmentRequest {
 
     @NotNull(message = "Date and time cannot be null")
     @JsonProperty(required = true)
-    LocalDateTime dateTime;
+    LocalDateTime appointmentDateTime;
 
     @NotNull(message = "Description cannot be null")
     @JsonProperty(required = true)

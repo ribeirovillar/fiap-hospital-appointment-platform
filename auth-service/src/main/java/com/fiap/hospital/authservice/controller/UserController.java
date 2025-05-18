@@ -1,6 +1,7 @@
 package com.fiap.hospital.authservice.controller;
 
 import com.fiap.hospital.authservice.dto.UserInfoResponse;
+import com.fiap.hospital.authservice.mapper.UserMapper;
 import com.fiap.hospital.authservice.usecase.GetUserInfoByIdUseCase;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     GetUserInfoByIdUseCase getUserInfoByIdUseCase;
+    UserMapper userMapper;
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserInfoResponse> getUserInfo(@PathVariable Long userId) {
-        return ResponseEntity.ok(getUserInfoByIdUseCase.execute(userId));
+        return ResponseEntity.ok(userMapper.mapUserInfo(getUserInfoByIdUseCase.execute(userId)));
     }
 
 }
