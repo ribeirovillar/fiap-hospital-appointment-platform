@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"john_doe\",\n    \"password\": \"123456\",\n    \"name\": \"John Doe\",\n    \"role\": \"PATIENT\"\n}",
+							"raw": "{\n    \"username\": \"doctor_strange\",\n    \"password\": \"123456\",\n    \"name\": \"Doctor Strange\",\n    \"role\": \"DOCTOR\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -40,12 +40,30 @@
 				},
 				{
 					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.globals.set(\"bearerToken\", jsonData.token);",
+									"    console.log(\"Token saved to global variable\");",
+									"} else {",
+									"    console.log(\"Token not found in response\");",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"john_doe\",\n    \"password\": \"123456\"\n}",
+							"raw": "{\n    \"username\": \"demostenis\",\n    \"password\": \"123456\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -68,14 +86,14 @@
 					"response": []
 				},
 				{
-					"name": "User Role",
+					"name": "Get User Info",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50OCIsInJvbGUiOiJQQVRJRU5UIiwiaWF0IjoxNzQ3MzYwMzYzLCJleHAiOjE3NDc0NDY3NjN9.wxOTOQ_8oXCYlCa2yeWm--j7IXK4aXUgPu6GB0O2JCo",
+									"value": "{{bearerToken}}",
 									"type": "string"
 								}
 							]
@@ -102,12 +120,234 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Validate Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{bearerToken}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/validate-token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"validate-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Identify Me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Appointment Service API",
-			"item": []
+			"item": [
+				{
+					"name": "Create Appointment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idPatient\": 8,\n    \"idNurse\": 7,\n    \"idDoctor\": 1,\n    \"appointmentDateTime\": \"2024-05-20T14:30:00\",\n    \"description\": \"Regular checkup\",\n    \"status\": \"BOOKED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/appointments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Appointment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idPatient\": 9,\n    \"idNurse\": 7,\n    \"idDoctor\": 19,\n    \"appointmentDateTime\": \"2024-06-06T14:30:00\",\n    \"description\": \"Regular checkup\",\n    \"status\": \"CANCELLED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/appointments/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"appointments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "14"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Appointments",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idPatient\": 8,\n    \"idNurse\": 7,\n    \"idDoctor\": 1,\n    \"appointmentDateTime\": \"2024-05-20T14:30:00\",\n    \"description\": \"Regular checkup\",\n    \"status\": \"BOOKED\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/appointments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Appointment By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idPatient\": 8,\n    \"idNurse\": 7,\n    \"idDoctor\": 1,\n    \"appointmentDateTime\": \"2024-05-20T14:30:00\",\n    \"description\": \"Regular checkup\",\n    \"status\": \"BOOKED\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/appointments/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"appointments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "14"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

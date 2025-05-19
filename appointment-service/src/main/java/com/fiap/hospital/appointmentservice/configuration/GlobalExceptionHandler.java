@@ -23,8 +23,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
     }
 
-    @ExceptionHandler(AppointmentNotFoundException.class)
-    public ResponseEntity<?> handleAppointmentNotFound(AppointmentNotFoundException ex) {
+    @ExceptionHandler({
+            AppointmentNotFoundException.class,
+            ParticipantNotFoundException.class
+    })
+    public ResponseEntity<?> handleResourceNotFound(Exception ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("error", ex.getMessage()));
     }
