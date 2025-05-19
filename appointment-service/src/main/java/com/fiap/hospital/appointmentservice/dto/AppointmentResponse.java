@@ -21,7 +21,7 @@ public class AppointmentResponse {
     String doctorName;
     Long idNurse;
     String nurseName;
-    LocalDateTime dateTime;
+    LocalDateTime appointmentDateTime;
     String description;
     AppointmentStatus status;
 }

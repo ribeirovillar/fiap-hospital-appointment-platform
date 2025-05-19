@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UserRoleValidation implements CreateAppointmentStrategy {
+public class UserRoleValidation implements CreateAppointmentStrategy, UpdateAppointmentStrategy {
 
     UserRoleValidationService userRoleValidationService;
 

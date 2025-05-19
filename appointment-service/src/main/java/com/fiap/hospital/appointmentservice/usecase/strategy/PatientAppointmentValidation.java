@@ -8,17 +8,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
-public class PatientAppointmentValidation implements CreateAppointmentStrategy {
+public class PatientAppointmentValidation implements CreateAppointmentStrategy, UpdateAppointmentStrategy {
 
     AppointmentRepository appointmentRepository;
 
     @Override
     public void execute(Appointment appointment) {
-        if (appointmentRepository.existsByIdPatientAndAppointmentDateTime(appointment.getIdPatient(), appointment.getAppointmentDateTime())) {
-            throw new PatientAlreadyHasAppointmentException("Patient already has an appointment at the given date/time.");
-        }
+        appointmentRepository.findByIdPatientAndAppointmentDateTime(appointment.getIdPatient(), appointment.getAppointmentDateTime())
+                .ifPresent(app -> {
+                    if (!Objects.equals(app.getId(), appointment.getId())) {
+                        throw new PatientAlreadyHasAppointmentException("Patient already has an appointment at the given date/time.");
+                    }
+                });
     }
 }

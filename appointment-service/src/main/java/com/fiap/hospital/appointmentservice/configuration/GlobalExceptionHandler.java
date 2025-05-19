@@ -1,9 +1,7 @@
 package com.fiap.hospital.appointmentservice.configuration;
 
-import com.fiap.hospital.appointmentservice.exception.DoctorAlreadyHasAppointmentException;
-import com.fiap.hospital.appointmentservice.exception.NurseAlreadyHasAppointmentException;
-import com.fiap.hospital.appointmentservice.exception.PatientAlreadyHasAppointmentException;
-import com.fiap.hospital.appointmentservice.exception.UserRoleNotMatchException;
+import com.fiap.hospital.appointmentservice.exception.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +21,12 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<?> handleExceptions(Exception ex) {
         return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
+    }
+
+    @ExceptionHandler(AppointmentNotFoundException.class)
+    public ResponseEntity<?> handleAppointmentNotFound(AppointmentNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", ex.getMessage()));
     }
 
 
