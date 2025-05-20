@@ -2,6 +2,7 @@ package com.fiap.hospital.authservice.configuration;
 
 import com.fiap.hospital.authservice.entity.User;
 import com.fiap.hospital.authservice.repository.UserRepository;
+import com.fiap.hospital.authservice.service.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,7 +26,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    JwtUtil jwtUtil;
+    JwtService jwtService;
     UserRepository userRepository;
 
     @Override
@@ -43,13 +44,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         final String token = authHeader.substring(7);
 
-        if (!jwtUtil.isTokenValid(token)) {
+        if (!jwtService.isTokenValid(token)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String username = jwtUtil.extractUsername(token);
-        Claims claims = jwtUtil.extractAllClaims(token);
+        String username = jwtService.extractUsername(token);
+        Claims claims = jwtService.extractAllClaims(token);
         String role = claims.get("role", String.class);
 
         User user = userRepository.findByUsername(username).orElse(null);

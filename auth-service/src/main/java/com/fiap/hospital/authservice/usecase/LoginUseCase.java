@@ -1,6 +1,6 @@
 package com.fiap.hospital.authservice.usecase;
 
-import com.fiap.hospital.authservice.configuration.JwtUtil;
+import com.fiap.hospital.authservice.service.JwtService;
 import com.fiap.hospital.authservice.dto.LoginRequest;
 import com.fiap.hospital.authservice.dto.LoginResponse;
 import com.fiap.hospital.authservice.exception.TokenGenerationException;
@@ -19,7 +19,7 @@ import java.util.List;
 public class LoginUseCase {
 
     UserRepository userRepository;
-    JwtUtil jwtUtil;
+    JwtService jwtService;
     List<LoginStrategy> loginStrategies;
 
 
@@ -27,7 +27,7 @@ public class LoginUseCase {
         loginStrategies.forEach(strategy -> strategy.execute(request));
 
         String token = userRepository.findByUsername(request.getUsername())
-                .map(user -> jwtUtil.generateToken(user.getUsername(), user.getRole().name()))
+                .map(user -> jwtService.generateToken(user.getUsername(), user.getRole().name()))
                 .orElseThrow(() -> new TokenGenerationException("Failed to generate token"));
 
         return new LoginResponse(token);

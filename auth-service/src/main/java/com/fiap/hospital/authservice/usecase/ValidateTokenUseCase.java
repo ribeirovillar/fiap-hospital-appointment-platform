@@ -1,6 +1,6 @@
 package com.fiap.hospital.authservice.usecase;
 
-import com.fiap.hospital.authservice.configuration.JwtUtil;
+import com.fiap.hospital.authservice.service.JwtService;
 import com.fiap.hospital.authservice.dto.TokenValidationRequest;
 import com.fiap.hospital.authservice.dto.TokenValidationResponse;
 import com.fiap.hospital.authservice.enums.Role;
@@ -16,17 +16,17 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(makeFinal = true, level = PRIVATE)
 public class ValidateTokenUseCase {
 
-    JwtUtil jwtUtil;
+    JwtService jwtService;
 
     public TokenValidationResponse execute(TokenValidationRequest request) {
         String token = request.getToken();
 
-        if (!jwtUtil.isTokenValid(token)) {
+        if (!jwtService.isTokenValid(token)) {
             return new TokenValidationResponse(null, null, false);
         }
 
-        String username = jwtUtil.extractUsername(token);
-        Claims claims = jwtUtil.extractAllClaims(token);
+        String username = jwtService.extractUsername(token);
+        Claims claims = jwtService.extractAllClaims(token);
         String role = claims.get("role", String.class);
 
         return new TokenValidationResponse(username, Role.valueOf(role), true);

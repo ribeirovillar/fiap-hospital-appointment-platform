@@ -1,6 +1,7 @@
 package com.fiap.hospital.appointmentservice.usecase;
 
 import com.fiap.hospital.appointmentservice.entity.Appointment;
+import com.fiap.hospital.appointmentservice.messaging.AppointmentPublisher;
 import com.fiap.hospital.appointmentservice.repository.AppointmentRepository;
 import com.fiap.hospital.appointmentservice.usecase.strategy.CreateAppointmentStrategy;
 import com.fiap.hospital.appointmentservice.usecase.strategy.RetrieveAppointmentStrategy;
@@ -19,6 +20,7 @@ public class CreateAppointmentUseCase {
     AppointmentRepository appointmentRepository;
     List<CreateAppointmentStrategy> createAppointmentStrategies;
     List<RetrieveAppointmentStrategy> retrieveAppointmentStrategies;
+    AppointmentPublisher appointmentPublisher;
 
 
     public Appointment execute(Appointment appointment) {
@@ -28,6 +30,8 @@ public class CreateAppointmentUseCase {
         Appointment saved = appointmentRepository.save(appointment);
 
         retrieveAppointmentStrategies.forEach(strategy -> strategy.execute(saved));
+
+        appointmentPublisher.publish(saved);
 
         return saved;
 
