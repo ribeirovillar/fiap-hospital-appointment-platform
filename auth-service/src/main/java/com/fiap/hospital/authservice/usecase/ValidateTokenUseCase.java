@@ -1,10 +1,10 @@
 package com.fiap.hospital.authservice.usecase;
 
-import com.fiap.hospital.authservice.service.JwtService;
 import com.fiap.hospital.authservice.dto.TokenValidationRequest;
 import com.fiap.hospital.authservice.dto.TokenValidationResponse;
-import com.fiap.hospital.authservice.enums.Role;
-import io.jsonwebtoken.Claims;
+import com.fiap.hospital.authservice.exception.UserNotFoundException;
+import com.fiap.hospital.authservice.repository.UserRepository;
+import com.fiap.hospital.authservice.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
@@ -17,18 +17,18 @@ import static lombok.AccessLevel.PRIVATE;
 public class ValidateTokenUseCase {
 
     JwtService jwtService;
+    UserRepository userRepository;
 
     public TokenValidationResponse execute(TokenValidationRequest request) {
         String token = request.getToken();
 
         if (!jwtService.isTokenValid(token)) {
-            return new TokenValidationResponse(null, null, false);
+            return new TokenValidationResponse(null, null, null, false);
         }
 
         String username = jwtService.extractUsername(token);
-        Claims claims = jwtService.extractAllClaims(token);
-        String role = claims.get("role", String.class);
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        return new TokenValidationResponse(username, Role.valueOf(role), true);
+        return new TokenValidationResponse(user.getId(), username, user.getRole(), true);
     }
 }

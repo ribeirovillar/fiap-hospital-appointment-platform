@@ -18,7 +18,4 @@ public interface AuthServiceClient {
     @PostMapping("/auth/validate-token")
     TokenValidationResponse validateToken(@RequestBody TokenValidationRequest request);
 
-    @GetMapping("/users/me")
-    UserInfoResponse getCurrentUserInfo();
-
 }
