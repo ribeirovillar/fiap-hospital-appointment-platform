@@ -1,0 +1,19 @@
+type Query {
+    appointmentsByPatient(idPatient: ID!): [AppointmentResponse]
+}
+
+type AppointmentResponse {
+    id: ID
+    description: String
+    appointmentDateTime: String
+    status: String
+
+    idPatient: ID
+    patientName: String
+
+    idDoctor: ID
+    doctorName: String
+
+    idNurse: ID
+    nurseName: String
+}

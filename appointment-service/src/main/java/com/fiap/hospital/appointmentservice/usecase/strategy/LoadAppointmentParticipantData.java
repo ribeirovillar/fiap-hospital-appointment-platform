@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
-public class LoadAppointmentParticipantData implements RetrieveAppointmentStrategy {
+public class LoadAppointmentParticipantData implements CreateAppointmentStrategy, UpdateAppointmentStrategy {
 
     AuthServiceClient authServiceClient;
 

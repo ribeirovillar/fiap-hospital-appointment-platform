@@ -1,19 +1,16 @@
-package com.fiap.hospital.appointmentservice.entity;
+package com.fiap.hospital.historyservice.entity;
 
-import com.fiap.hospital.appointmentservice.enums.AppointmentStatus;
+import com.fiap.hospital.historyservice.enums.AppointmentStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "appointments")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Appointment {
 
@@ -30,5 +27,4 @@ public class Appointment {
     String description;
     @Enumerated(EnumType.STRING)
     AppointmentStatus status;
-
 }

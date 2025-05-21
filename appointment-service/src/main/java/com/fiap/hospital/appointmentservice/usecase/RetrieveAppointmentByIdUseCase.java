@@ -5,41 +5,33 @@ import com.fiap.hospital.appointmentservice.configuration.AuthenticatedUser;
 import com.fiap.hospital.appointmentservice.entity.Appointment;
 import com.fiap.hospital.appointmentservice.exception.AppointmentNotFoundException;
 import com.fiap.hospital.appointmentservice.repository.AppointmentRepository;
-import com.fiap.hospital.appointmentservice.usecase.strategy.RetrieveAppointmentStrategy;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import static com.fiap.hospital.appointmentservice.enums.Role.PATIENT;
 
 @Component
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class RetrieveAppointmentByIdUseCase {
 
-    AppointmentRepository appointmentRepository;
-    List<RetrieveAppointmentStrategy> retrieveAppointmentStrategies;
+    private final AppointmentRepository appointmentRepository;
 
     public Appointment execute(Long id) {
+        AuthenticatedUser user = getCurrentUser();
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        AuthenticatedUser user = (AuthenticatedUser) auth.getPrincipal();
-
-        Appointment appointment;
-
-        if ("PATIENT".equalsIgnoreCase(user.getRole())) {
-            Long idPatient = user.getId();
-            appointment = appointmentRepository.findByIdAndIdPatient(id, idPatient).orElseThrow(() -> new AppointmentNotFoundException("Appointment not found or you do not have permission to access it"));
-        } else {
-            appointment = appointmentRepository.findById(id).orElseThrow(() -> new AppointmentNotFoundException("Appointment not found with id: " + id));
+        if (PATIENT.name().equalsIgnoreCase(user.getRole())) {
+            return appointmentRepository.findByIdAndIdPatient(id, user.getId())
+                    .orElseThrow(() -> new AppointmentNotFoundException("Appointment not found or you do not have permission to access it"));
         }
 
-        retrieveAppointmentStrategies.forEach(strategy -> strategy.execute(appointment));
-
-        return appointment;
+        return appointmentRepository.findById(id)
+                .orElseThrow(() -> new AppointmentNotFoundException("Appointment not found with id: " + id));
     }
 
+    private AuthenticatedUser getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (AuthenticatedUser) auth.getPrincipal();
+    }
 }

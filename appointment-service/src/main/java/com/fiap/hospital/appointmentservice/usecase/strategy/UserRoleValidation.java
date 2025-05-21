@@ -1,6 +1,7 @@
 package com.fiap.hospital.appointmentservice.usecase.strategy;
 
 import com.fiap.hospital.appointmentservice.entity.Appointment;
+import com.fiap.hospital.appointmentservice.enums.Role;
 import com.fiap.hospital.appointmentservice.service.UserRoleValidationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +17,10 @@ public class UserRoleValidation implements CreateAppointmentStrategy, UpdateAppo
 
     @Override
     public void execute(Appointment appointment) {
-        userRoleValidationService.validateUserIdByRole(appointment.getIdDoctor(), "DOCTOR");
-        userRoleValidationService.validateUserIdByRole(appointment.getIdPatient(), "PATIENT");
+        userRoleValidationService.validateUserIdByRole(appointment.getIdDoctor(), Role.DOCTOR.name());
+        userRoleValidationService.validateUserIdByRole(appointment.getIdPatient(), Role.PATIENT.name());
         if (appointment.getIdNurse() != null) {
-            userRoleValidationService.validateUserIdByRole(appointment.getIdNurse(), "NURSE");
+            userRoleValidationService.validateUserIdByRole(appointment.getIdNurse(), Role.NURSE.name());
         }
     }
 }
