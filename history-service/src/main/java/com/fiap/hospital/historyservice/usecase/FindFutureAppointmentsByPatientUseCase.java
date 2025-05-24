@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -13,13 +14,12 @@ import static lombok.AccessLevel.PRIVATE;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = PRIVATE)
-public class FindAppointmentsByPatientUseCase implements AppointmentUseCase {
+public class FindFutureAppointmentsByPatientUseCase implements AppointmentUseCase {
 
     AppointmentRepository repository;
 
-    @Override
     public List<Appointment> execute(Long idPatient) {
         accessValidation(idPatient);
-        return repository.findByIdPatient(idPatient);
+        return repository.findByIdPatientAndAppointmentDateTimeAfter(idPatient, LocalDateTime.now());
     }
 }

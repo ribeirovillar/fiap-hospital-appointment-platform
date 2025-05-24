@@ -3,6 +3,7 @@ package com.fiap.hospital.historyservice.controller;
 import com.fiap.hospital.historyservice.dto.AppointmentResponse;
 import com.fiap.hospital.historyservice.mapper.AppointmentMapper;
 import com.fiap.hospital.historyservice.usecase.FindAppointmentsByPatientUseCase;
+import com.fiap.hospital.historyservice.usecase.FindFutureAppointmentsByPatientUseCase;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,10 +20,16 @@ public class AppointmentGraphQLController {
 
     AppointmentMapper mapper;
     FindAppointmentsByPatientUseCase findAppointmentsByPatientUseCase;
+    FindFutureAppointmentsByPatientUseCase findFutureAppointmentsByPatientUseCase;
 
     @QueryMapping
     public List<AppointmentResponse> appointmentsByPatient(@Argument Long idPatient) {
         return findAppointmentsByPatientUseCase.execute(idPatient).stream().map(mapper::map).toList();
+    }
+
+    @QueryMapping
+    public List<AppointmentResponse> futureAppointmentsByPatient(@Argument Long idPatient) {
+        return findFutureAppointmentsByPatientUseCase.execute(idPatient).stream().map(mapper::map).toList();
     }
 
 }
