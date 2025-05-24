@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "8b729da1-4bb1-49cd-a73b-f01416773b04",
-		"name": "FIAP - Hospital Appointment Platform",
+		"name": "FIAP - Hospital Appointment Platform API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "9428245"
 	},
@@ -63,7 +63,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"demostenis\",\n    \"password\": \"123456\"\n}",
+							"raw": "{\n    \"username\": \"doctor_strange\",\n    \"password\": \"123456\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -335,7 +335,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"query\": \"query { appointmentsByPatient(idPatient: 9) { id description appointmentDateTime status patientName doctorName nurseName } }\"\n}",
+							"raw": "{\n    \"query\": \"query { appointmentsByPatient(idPatient: 3) { id description appointmentDateTime status patientName doctorName nurseName } }\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -343,12 +343,46 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8082/graphql",
+							"raw": "http://localhost:8083/graphql",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8082",
+							"port": "8083",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Appointment In Future By Patient",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"query { futureAppointmentsByPatient(idPatient: 3) { id appointmentDateTime description status patientName doctorName } }\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
 							"path": [
 								"graphql"
 							]

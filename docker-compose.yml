@@ -1,4 +1,5 @@
 services:
+
   postgres:
     image: postgres:15
     environment:
@@ -13,3 +14,57 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+
+  auth:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hospital
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+
+  appointment:
+    build:
+      context: ./appointment-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hospital
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: rabbitmq
+      AUTH_SERVICE_URL: http://auth:8080
+    ports:
+      - "8081:8081"
+
+  notification:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+    ports:
+      - "8082:8082"
+
+  history:
+    build:
+      context: ./history-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hospital
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      AUTH_SERVICE_URL: http://auth:8080
+    ports:
+      - "8083:8083"
