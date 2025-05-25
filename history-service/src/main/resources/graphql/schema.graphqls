@@ -1,6 +1,7 @@
 type Query {
     appointmentsByPatient(idPatient: ID!): [AppointmentResponse]
     futureAppointmentsByPatient(idPatient: ID!): [AppointmentResponse]
+    futureAppointments: [AppointmentResponse]
 }
 
 type AppointmentResponse {

@@ -20,6 +20,6 @@ public class FindAppointmentsByPatientUseCase implements AppointmentUseCase {
     @Override
     public List<Appointment> execute(Long idPatient) {
         accessValidation(idPatient);
-        return repository.findByIdPatient(idPatient);
+        return repository.findAllByIdPatient(idPatient);
     }
 }

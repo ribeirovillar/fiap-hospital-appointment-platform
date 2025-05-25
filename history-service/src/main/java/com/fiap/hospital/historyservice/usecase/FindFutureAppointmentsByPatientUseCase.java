@@ -20,6 +20,6 @@ public class FindFutureAppointmentsByPatientUseCase implements AppointmentUseCas
 
     public List<Appointment> execute(Long idPatient) {
         accessValidation(idPatient);
-        return repository.findByIdPatientAndAppointmentDateTimeAfter(idPatient, LocalDateTime.now());
+        return repository.findAllByIdPatientAndAppointmentDateTimeAfter(idPatient, LocalDateTime.now());
     }
 }

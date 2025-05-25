@@ -14,9 +14,13 @@ public interface AppointmentUseCase {
     List<Appointment> execute(Long idPatient);
 
     default void accessValidation(Long idPatient) {
-        AuthenticatedUser user = (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AuthenticatedUser user = getCurrentUser();
         if (PATIENT.equalsIgnoreCase(user.getRole()) && !user.getId().equals(idPatient)) {
             throw new AppointmentPermissionException("Access denied: patients can only view their own appointments");
         }
+    }
+
+    default AuthenticatedUser getCurrentUser() {
+        return (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }
